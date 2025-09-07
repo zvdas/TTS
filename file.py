@@ -59,8 +59,12 @@ for i, text in enumerate(affirmations, start=1):
 # Combine & add background
 # ============================
 
-# Add 5 seconds of silence at the end
-final_audio = sum(segments) + AudioSegment.silent(duration=5000)
+# Add 5 sec silence at start + 5 sec silence at end
+final_audio = (
+    AudioSegment.silent(duration=5000) +
+    sum(segments) +
+    AudioSegment.silent(duration=5000)
+)
 
 if os.path.exists(BACKGROUND_MUSIC_FILE):
     music = AudioSegment.from_file(BACKGROUND_MUSIC_FILE)
