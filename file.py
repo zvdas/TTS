@@ -59,7 +59,8 @@ for i, text in enumerate(affirmations, start=1):
 # Combine & add background
 # ============================
 
-final_audio = sum(segments)
+# Add 5 seconds of silence at the end
+final_audio = sum(segments) + AudioSegment.silent(duration=5000)
 
 if os.path.exists(BACKGROUND_MUSIC_FILE):
     music = AudioSegment.from_file(BACKGROUND_MUSIC_FILE)
@@ -68,8 +69,13 @@ if os.path.exists(BACKGROUND_MUSIC_FILE):
     while len(music) < len(final_audio):
         music += music
 
+    # Trim & fade music to match final length
     music = music[:len(final_audio)].fade_in(2000).fade_out(2000)
-    music = music - 15  # reduce volume
+
+    # Lower music volume
+    music = music - 15  
+
+    # Overlay voice + music
     final_audio = final_audio.overlay(music)
 
 final_path = os.path.join(OUTPUT_DIR, "meditation_affirmations.mp3")
